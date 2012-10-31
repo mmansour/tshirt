@@ -18,6 +18,6 @@ notes/
 log/
 migrations/
 static/media/
-!tshirt/urls.py
+!tee/urls.py
 
 
