@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mezzanine_tags keyword_tags %}
 
-{% block meta_title %}Create TShirt{% endblock %}
+{% block meta_title %}My TShirts{% endblock %}
 
 {#{% block meta_keywords %}{% metablock %}#}
 {#{% keywords_for page as keywords %}#}
@@ -16,23 +16,15 @@
 {#{% endmetablock %}{% endblock %}#}
 
 {% block title %}
-    Create TShirt
+    My TShirts
 {% endblock %}
 
 {% block main %}
 
-<div id="contact-form">
-<p>
-Enter two subjects in the form below to elucidate the difference between them:
-</p>
-
-<form enctype="multipart/form-data" action="/create-tshirt/" method="post" id="create-shirt" autocomplete="on">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Submit" />
-</form>
-
-</div>
-
-
+<ul>
+{% for s in shirt_list %}
+    <li><a href="edit/{{ s.id }}">Order # {{ s.id }}</a></li>
+{% endfor %}
+</ul>
+    
 {% endblock %}

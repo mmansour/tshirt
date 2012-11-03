@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load mezzanine_tags keyword_tags %}
 
-{% block meta_title %}Create TShirt{% endblock %}
+{% block meta_title %}Edit My TShirt{% endblock %}
 
 {#{% block meta_keywords %}{% metablock %}#}
 {#{% keywords_for page as keywords %}#}
@@ -16,23 +16,17 @@
 {#{% endmetablock %}{% endblock %}#}
 
 {% block title %}
-    Create TShirt
+    Edit My TShirt
 {% endblock %}
 
 {% block main %}
 
-<div id="contact-form">
-<p>
-Enter two subjects in the form below to elucidate the difference between them:
-</p>
+    Edit Shirt: {{ tshirt.user }}
 
-<form enctype="multipart/form-data" action="/create-tshirt/" method="post" id="create-shirt" autocomplete="on">
+    <form enctype="multipart/form-data" action="/my-tshirts/edit/{{ tshirt.id }}/" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
-</form>
-
-</div>
-
-
+    </form>
+    
 {% endblock %}
