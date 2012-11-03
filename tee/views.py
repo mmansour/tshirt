@@ -66,7 +66,7 @@ def create_shirt_form(request):
                          is_order_closed=False)
             obj.save()
             
-            redirect = "{0}whatevs/".format(request.path)
+            redirect = "{0}?submitted=true".format(request.path)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/create-tshirt.html',
