@@ -17,7 +17,7 @@ class TShirtAdmin(DisplayableAdmin):
     ]
 
     def logo_link(self,obj):
-        return u'<a href="/static/media/%s/">%s</a>' % (obj.logo, obj.logo)
+        return u'<a href="/static/media/%s">%s</a>' % (obj.logo, obj.logo)
     logo_link.allow_tags = True
 
     list_display = ('user','title', 'logo_link','color' ,'additional_instructions' ,'publish_date', 'is_order_closed',)
