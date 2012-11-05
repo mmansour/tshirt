@@ -11,7 +11,8 @@ class TShirtAdmin(DisplayableAdmin):
         ("Published Status",            {'fields': ['status']}),
         ("Order Closed?",            {'fields': ['is_order_closed']}),
         ("User",            {'fields': ['user']}),
-        ("Logo",            {'fields': ['logo',]}),
+        ("Images",            {'fields': ['logo','design_layout',]}),
+        ("Text",            {'fields': ['shirt_text',]}),
         ("Color",            {'fields': ['color',]}),
         ("Additional Instructions",            {'fields': ['additional_instructions',]}),
     ]
