@@ -7,6 +7,7 @@ from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, Ht
 
 def my_shirt_list(request):
     shirt_list = TShirt.objects.filter(user=request.user)
+#    print request.user.last_name
     return render_to_response('pages/my-tshirts.html',
                {'shirt_list':shirt_list},
                 context_instance=RequestContext(request))
@@ -17,11 +18,19 @@ class TShirtForm(forms.Form):
     additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
 
 
+def unauthorized(request):
+
+    return render_to_response('pages/unauthorized.html',
+               {},
+                context_instance=RequestContext(request))
+
+
+
 def edit_shirt(request, shirt_id):
     tshirt = TShirt.objects.get(id=shirt_id)
 
     if request.user != tshirt.user:
-        redirect = "{0}?submitted=true".format(request.path)
+        redirect = "/forbidden/"
         return HttpResponseRedirect(redirect)
 
     init_data = {
