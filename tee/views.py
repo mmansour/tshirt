@@ -3,6 +3,15 @@ from django.shortcuts import render_to_response, get_object_or_404, get_list_or_
 from django.template import RequestContext
 from django import forms
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
+from django.contrib.auth.models import User
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+#Created to avoid duplicated entries: see "if created"
+@receiver(post_save, sender=User, dispatch_uid='views')
+def user_created(sender, instance, created, **kwargs):
+    if created:
+        print("User Added")
 
 
 def my_shirt_list(request):
@@ -19,7 +28,6 @@ class TShirtForm(forms.Form):
 
 
 def unauthorized(request):
-
     return render_to_response('pages/unauthorized.html',
                {},
                 context_instance=RequestContext(request))

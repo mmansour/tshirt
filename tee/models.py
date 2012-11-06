@@ -3,7 +3,6 @@ from mezzanine.core.models import Displayable, RichTextField
 from mezzanine.generic.fields import CommentsField, RatingField
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 
 class TShirt(Displayable):
 
@@ -17,8 +16,6 @@ class TShirt(Displayable):
 
     def __unicode__(self):
         return self.title
-
-
 
 
 
