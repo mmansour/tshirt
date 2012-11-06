@@ -1,4 +1,4 @@
-from tee.models import TShirt
+from tee.models import TShirt, ValidAccounts
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 from django.template import RequestContext
 from django import forms
@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+
 #Created to avoid duplicated entries: see "if created"
 @receiver(post_save, sender=User, dispatch_uid='views')
 def user_created(sender, instance, created, **kwargs):
@@ -15,8 +17,14 @@ def user_created(sender, instance, created, **kwargs):
 
 
 def my_shirt_list(request):
+    try:
+        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except ValidAccounts.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
     shirt_list = TShirt.objects.filter(user=request.user)
-#    print request.user.last_name
     return render_to_response('pages/my-tshirts.html',
                {'shirt_list':shirt_list},
                 context_instance=RequestContext(request))
@@ -33,8 +41,14 @@ def unauthorized(request):
                 context_instance=RequestContext(request))
 
 
-
 def edit_shirt(request, shirt_id):
+    try:
+        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except ValidAccounts.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
     tshirt = TShirt.objects.get(id=shirt_id)
 
     if request.user != tshirt.user:
@@ -69,6 +83,13 @@ def edit_shirt(request, shirt_id):
 
 
 def create_shirt_form(request):
+    try:
+        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except ValidAccounts.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
     form = TShirtForm(auto_id=True)
     if request.method == "POST":
         form = TShirtForm(request.POST, request.FILES, auto_id=True)
@@ -82,7 +103,7 @@ def create_shirt_form(request):
                          additional_instructions=additional_instructions,
                          is_order_closed=False)
             obj.save()
-            
+
             redirect = "{0}?submitted=true".format(request.path)
             return HttpResponseRedirect(redirect)
 
