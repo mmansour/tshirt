@@ -5,7 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
 class TShirt(Displayable):
-
     user = models.ForeignKey(User)
     shirt_text = models.CharField(max_length=400, verbose_name="Text", blank=True, null=True)
     logo = models.ImageField(upload_to="uploads", blank=True, null=True, default='uploads/25off.png')
@@ -18,14 +17,18 @@ class TShirt(Displayable):
         return self.title
 
 
-class ValidAccounts(models.Model):
-    first_name = models.CharField(max_length=40, verbose_name="First Name", blank=True, null=True)
-    last_name = models.CharField(max_length=40, verbose_name="Last Name", blank=True, null=True)
-    email_address = models.EmailField(blank=True, null=True, verbose_name="Email Address",
-            help_text=_('Email address should be the one on record at Maker/RPM/TGS etc..'))
+#class ValidAccount(models.Model):
+#    first_name = models.CharField(max_length=40, verbose_name="First Name", blank=True, null=True)
+#    last_name = models.CharField(max_length=40, verbose_name="Last Name", blank=True, null=True)
+#    email_address = models.EmailField(blank=True, null=True, verbose_name="Email Address",
+#            help_text=_('Email address should be the one on record at Maker/RPM/TGS etc..'))
+#
+#    def __unicode__(self):
+#        return self.email_address
 
-    def __unicode__(self):
-        return self.email_address
+
+
+
 
 
 

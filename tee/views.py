@@ -1,4 +1,4 @@
-from tee.models import TShirt, ValidAccounts
+from tee.models import TShirt
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 from django.template import RequestContext
 from django import forms
@@ -17,12 +17,12 @@ def user_created(sender, instance, created, **kwargs):
 
 
 def my_shirt_list(request):
-    try:
-        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
-        print 'Found authorized user email: %s' % is_in_list.email_address
-    except ValidAccounts.DoesNotExist:
-        print 'User not allowed'
-        return HttpResponseRedirect('/forbidden/')
+#    try:
+#        is_in_list = ValidAccount.objects.get(email_address=request.user.email)
+#        print 'Found authorized user email: %s' % is_in_list.email_address
+#    except ValidAccount.DoesNotExist:
+#        print 'User not allowed'
+#        return HttpResponseRedirect('/forbidden/')
 
     shirt_list = TShirt.objects.filter(user=request.user)
     return render_to_response('pages/my-tshirts.html',
@@ -42,12 +42,12 @@ def unauthorized(request):
 
 
 def edit_shirt(request, shirt_id):
-    try:
-        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
-        print 'Found authorized user email: %s' % is_in_list.email_address
-    except ValidAccounts.DoesNotExist:
-        print 'User not allowed'
-        return HttpResponseRedirect('/forbidden/')
+#    try:
+#        is_in_list = ValidAccount.objects.get(email_address=request.user.email)
+#        print 'Found authorized user email: %s' % is_in_list.email_address
+#    except ValidAccount.DoesNotExist:
+#        print 'User not allowed'
+#        return HttpResponseRedirect('/forbidden/')
 
     tshirt = TShirt.objects.get(id=shirt_id)
 
@@ -83,12 +83,12 @@ def edit_shirt(request, shirt_id):
 
 
 def create_shirt_form(request):
-    try:
-        is_in_list = ValidAccounts.objects.get(email_address=request.user.email)
-        print 'Found authorized user email: %s' % is_in_list.email_address
-    except ValidAccounts.DoesNotExist:
-        print 'User not allowed'
-        return HttpResponseRedirect('/forbidden/')
+#    try:
+#        is_in_list = ValidAccount.objects.get(email_address=request.user.email)
+#        print 'Found authorized user email: %s' % is_in_list.email_address
+#    except ValidAccount.DoesNotExist:
+#        print 'User not allowed'
+#        return HttpResponseRedirect('/forbidden/')
 
     form = TShirtForm(auto_id=True)
     if request.method == "POST":
