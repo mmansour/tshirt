@@ -1,21 +1,61 @@
 from tee.models import TShirt, AllowedUser
+from django.contrib.auth.models import User
+
 from django.shortcuts import render_to_response, get_object_or_404, get_list_or_404
 from django.template import RequestContext
 from django import forms
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.contrib.auth.models import User
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.sites.models import get_current_site
 
-#Created to avoid duplicated entries: see "if created"
+
+#TO avoid duplicated entries: see "if created"
 @receiver(post_save, sender=User, dispatch_uid='views')
 def user_created(sender, instance, created, **kwargs):
     if created:
         print("User Added")
 
+        
+#UPON SHIRT CREATION OR UPDATE SEND AN EMAIL TO RODEO and CREATOR
+@receiver(post_save, sender=TShirt, dispatch_uid='views')
+def shirt_created(sender, instance, created, **kwargs):
+    if created:
+        #TO Rodeo
+        subject = 'New shirt created by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
+        text_content = '{0} {1} has created a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
+        html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
 
+        creator_subject = "Your design has been uploaded"
+        creator_text_content = "Your design has been uploaded."
+        creator_html_content = "Your design has been uploaded."
+
+    else:
+        #TO Rodeo
+        subject = 'Shirt edited by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
+        text_content = '{0} {1} has edited a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
+        html_content = '{0} {1} has edited a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
+
+        creator_subject = "Your design has been edited"
+        creator_text_content = "Your design has been edited."
+        creator_html_content = "Your design has been edited."
+
+    from_email='matt.mansour@makerstudios.com'
+    to='slackbabbath@gmail.com'
+    creater_to = instance.user.email
+
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+    creator_msg.attach_alternative(creator_html_content, "text/html")
+    creator_msg.send()
+
+    
 def my_shirt_list(request):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
