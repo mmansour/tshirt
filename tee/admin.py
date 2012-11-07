@@ -1,4 +1,4 @@
-from tee.models import TShirt
+from tee.models import TShirt, AllowedUser
 from django.contrib import admin
 from mezzanine.core.admin import DisplayableAdmin
 
@@ -28,13 +28,13 @@ class TShirtAdmin(DisplayableAdmin):
     date_hierarchy = 'publish_date'
 
 
-#class ValidAccountAdmin(admin.ModelAdmin):
-#    list_display = ('first_name','last_name','email_address',)
-#    list_display_links = ('email_address',)
-##    list_editable = ('email_address',)
+class AllowedUserAdmin(admin.ModelAdmin):
+    list_display = ('first_name','last_name','email_address',)
+    list_display_links = ('email_address',)
+#    list_editable = ('email_address',)
 
     
 admin.site.register(TShirt, TShirtAdmin)
-#admin.site.register(ValidAccount, ValidAccountAdmin)
+admin.site.register(AllowedUser, AllowedUserAdmin)
 
   
