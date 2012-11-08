@@ -10,7 +10,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django.core.mail import EmailMultiAlternatives
-from django.contrib.sites.models import get_current_site
 
 
 #TO avoid duplicated entries: see "if created"
@@ -144,7 +143,7 @@ def create_shirt_form(request):
                          is_order_closed=False)
             obj.save()
 
-            redirect = "{0}?submitted=true".format(request.path)
+            redirect = "{0}?logo={1}".format(request.path, obj.logo)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/create-tshirt.html',
