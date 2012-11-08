@@ -80,6 +80,12 @@ def unauthorized(request):
                 context_instance=RequestContext(request))
 
 
+def designer(request):
+    return render_to_response('pages/designer.html',
+               {},
+                context_instance=RequestContext(request))
+
+
 def edit_shirt(request, shirt_id):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -113,7 +119,7 @@ def edit_shirt(request, shirt_id):
             tshirt.additional_instructions = additional_instructions
             tshirt.save()
 
-            redirect = "{0}?logo={1}".format(request.path, tshirt.logo)
+            redirect = "/designer/?logo={0}".format(tshirt.logo)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/edit-tshirt.html',
@@ -143,7 +149,7 @@ def create_shirt_form(request):
                          is_order_closed=False)
             obj.save()
 
-            redirect = "{0}?logo={1}".format(request.path, obj.logo)
+            redirect = "/designer/?logo={0}".format(obj.logo)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/create-tshirt.html',
