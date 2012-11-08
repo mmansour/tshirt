@@ -10,6 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django.core.mail import EmailMultiAlternatives
+from django.core.exceptions import ValidationError
 
 
 #TO avoid duplicated entries: see "if created"
@@ -69,8 +70,12 @@ def my_shirt_list(request):
                 context_instance=RequestContext(request))
 
 
+def validate_file_extension(value):
+    if not value.name.endswith('.png'):
+        raise ValidationError(u'Image must be a .png.')
+
 class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=False)
+    logo = forms.ImageField(required=False, validators=[validate_file_extension])
     additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
 
 
