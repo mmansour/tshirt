@@ -113,7 +113,7 @@ def edit_shirt(request, shirt_id):
             tshirt.additional_instructions = additional_instructions
             tshirt.save()
 
-            redirect = "{0}?submitted=true".format(request.path)
+            redirect = "{0}?logo={1}".format(request.path, tshirt.logo)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/edit-tshirt.html',
