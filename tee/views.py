@@ -55,6 +55,23 @@ def shirt_created(sender, instance, created, **kwargs):
     creator_msg.attach_alternative(creator_html_content, "text/html")
     creator_msg.send()
 
+
+def tool_edit(request, shirt_id, shirt_color):
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt = TShirt.objects.get(id=shirt_id)
+    tshirt.color = shirt_color
+    tshirt.save()
+
+    return render_to_response('pages/success.html',
+               {},
+                context_instance=RequestContext(request))
+
     
 def my_shirt_list(request):
     try:
@@ -124,7 +141,7 @@ def edit_shirt(request, shirt_id):
             tshirt.additional_instructions = additional_instructions
             tshirt.save()
 
-            redirect = "/designer/?logo={0}".format(tshirt.logo)
+            redirect = "/designer/?logo={0}&shirtid={1}".format(tshirt.logo, tshirt.id)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/edit-tshirt.html',
@@ -154,7 +171,7 @@ def create_shirt_form(request):
                          is_order_closed=False)
             obj.save()
 
-            redirect = "/designer/?logo={0}".format(obj.logo)
+            redirect = "/designer/?logo={0}&shirtid={1}".format(obj.logo, obj.id)
             return HttpResponseRedirect(redirect)
 
     return render_to_response('pages/create-tshirt.html',

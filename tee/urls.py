@@ -11,5 +11,6 @@ urlpatterns = patterns('tee.views',
     (r'^forbidden/$', 'unauthorized'),
     (r'^my-tshirts/$', 'my_shirt_list'),
     (r'^my-tshirts/edit/(?P<shirt_id>\d+)/$', 'edit_shirt'),
+    (r'^my-tshirts/tool-edit/(?P<shirt_id>\d+)/(?P<shirt_color>\w+)/$', 'tool_edit'),
 )
   
