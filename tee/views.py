@@ -14,8 +14,6 @@ from django.core.exceptions import ValidationError
 from django.views.decorators.csrf import csrf_exempt,  csrf_protect
 import os
 
-from django.views.decorators.cache import never_cache
-
 
 def validate_file_extension(value):
     if not value.name.endswith('.png'):
@@ -68,57 +66,37 @@ def shirt_created(sender, instance, created, **kwargs):
 #    creator_msg.attach_alternative(creator_html_content, "text/html")
 #    creator_msg.send()
 
-@never_cache
 def tool_edit(request, shirt_id):
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
 
-#    return HttpResponse('The post data is {0} {1}'.format(request.POST.get('col'), request.POST.get('img')))
-
-#    try:
-#        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
-#        print 'Found authorized user email: %s' % is_in_list.email_address
-#    except AllowedUser.DoesNotExist:
-#        print 'User not allowed'
-#        return HttpResponseRedirect('/forbidden/')
-#
     tshirt = TShirt.objects.get(id=shirt_id)
 
-    init_data = {
-        'additional_instructions':tshirt.additional_instructions,
-        'logo':tshirt.logo,
-    }
-
     if request.method == "POST":
-        logo = request.body
-        imagename = str(tshirt.logo.url)
-        curpath = os.path.abspath(os.curdir)
-        out = open('{0}{1}'.format(curpath, imagename), 'wb+')
-        out.write(logo)
-        out.close()
-
-#        color = request.POST.get('col')
-#        print 'Color: {0}'.format(color)
-
-#        if not logo:
-#            tshirt.logo = init_data['logo']
-#        else:
-#            tshirt.logo = '{0}{1}_{2}'.format(curpath, imagename, tshirt.id)
-##        tshirt.color = color
-#        tshirt.logo = logo
-#        tshirt.save()
-
-#            redirect = "/designer/?logo={0}&shirtid={1}".format(tshirt.logo, tshirt.id)
-#            return HttpResponseRedirect(redirect)
+        if request.GET.get('color', 'false')=='true':
+            color = request.POST.get('col')
+            tshirt.color = color
+            tshirt.save()
+        else:
+            logo = request.body
+            imagename = str(tshirt.logo.url)
+            curpath = os.path.abspath(os.curdir)
+            out = open('{0}{1}'.format(curpath, imagename), 'wb+')
+            out.write(logo)
+            out.close()
 
         return render_to_response('pages/success.html',
                 {'tshirt':tshirt},
                 context_instance=RequestContext(request))
 
-
     return render_to_response('pages/success.html',{},
                 context_instance=RequestContext(request))
 
 
-@never_cache
 def my_shirt_list(request):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -138,14 +116,12 @@ def unauthorized(request):
                 context_instance=RequestContext(request))
 
 
-@never_cache
 @csrf_exempt
 def designer(request):
     return render_to_response('pages/designer.html',{},
                 context_instance=RequestContext(request))
 
 
-@never_cache
 @csrf_protect
 def edit_shirt(request, shirt_id):
     try:
@@ -188,7 +164,6 @@ def edit_shirt(request, shirt_id):
                 context_instance=RequestContext(request))
 
 
-@never_cache
 @csrf_protect
 def create_shirt_form(request):
     try:
