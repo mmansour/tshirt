@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}Your design has been submitted!{% endblock %}
+
+{#{% block meta_keywords %}{% metablock %}#}
+{#{% keywords_for page as keywords %}#}
+{#{% for keyword in keywords %}#}
+{#    {% if not forloop.first %}, {% endif %}#}
+{#    {{ keyword }}#}
+{#{% endfor %}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{#{% block meta_description %}{% metablock %}#}
+{#{{ page.description }}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{% block title %}
+    Test flash submit results!
+{% endblock %}
+
+{% block main %}
+
+    <h2>Test flash submit results</h2>
+    {{ tshirt.id }}
+
+    <form enctype="multipart/form-data" action="/create-tshirt/" method="post" id="create-shirt" autocomplete="on">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>
+    
+{% endblock %}

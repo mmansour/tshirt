@@ -11,6 +11,19 @@ from django.dispatch import receiver
 
 from django.core.mail import EmailMultiAlternatives
 from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt,  csrf_protect
+import os
+
+from django.views.decorators.cache import never_cache
+
+
+def validate_file_extension(value):
+    if not value.name.endswith('.png'):
+        raise ValidationError(u'Image must be a .png.')
+
+class TShirtForm(forms.Form):
+    logo = forms.ImageField(required=False, validators=[validate_file_extension])
+    additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
 
 
 #TO avoid duplicated entries: see "if created"
@@ -47,32 +60,65 @@ def shirt_created(sender, instance, created, **kwargs):
     to='slackbabbath@gmail.com'
     creater_to = instance.user.email
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+#    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+#    msg.attach_alternative(html_content, "text/html")
+#    msg.send()
+#
+#    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+#    creator_msg.attach_alternative(creator_html_content, "text/html")
+#    creator_msg.send()
 
-    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
-    creator_msg.attach_alternative(creator_html_content, "text/html")
-    creator_msg.send()
+@never_cache
+def tool_edit(request, shirt_id):
 
+#    return HttpResponse('The post data is {0} {1}'.format(request.POST.get('col'), request.POST.get('img')))
 
-def tool_edit(request, shirt_id, shirt_color):
-    try:
-        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
-        print 'Found authorized user email: %s' % is_in_list.email_address
-    except AllowedUser.DoesNotExist:
-        print 'User not allowed'
-        return HttpResponseRedirect('/forbidden/')
-
+#    try:
+#        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+#        print 'Found authorized user email: %s' % is_in_list.email_address
+#    except AllowedUser.DoesNotExist:
+#        print 'User not allowed'
+#        return HttpResponseRedirect('/forbidden/')
+#
     tshirt = TShirt.objects.get(id=shirt_id)
-    tshirt.color = shirt_color
-    tshirt.save()
 
-    return render_to_response('pages/success.html',
-               {},
+    init_data = {
+        'additional_instructions':tshirt.additional_instructions,
+        'logo':tshirt.logo,
+    }
+
+    if request.method == "POST":
+        logo = request.body
+        imagename = str(tshirt.logo.url)
+        curpath = os.path.abspath(os.curdir)
+        out = open('{0}{1}'.format(curpath, imagename), 'wb+')
+        out.write(logo)
+        out.close()
+
+#        color = request.POST.get('col')
+#        print 'Color: {0}'.format(color)
+
+#        if not logo:
+#            tshirt.logo = init_data['logo']
+#        else:
+#            tshirt.logo = '{0}{1}_{2}'.format(curpath, imagename, tshirt.id)
+##        tshirt.color = color
+#        tshirt.logo = logo
+#        tshirt.save()
+
+#            redirect = "/designer/?logo={0}&shirtid={1}".format(tshirt.logo, tshirt.id)
+#            return HttpResponseRedirect(redirect)
+
+        return render_to_response('pages/success.html',
+                {'tshirt':tshirt},
                 context_instance=RequestContext(request))
 
-    
+
+    return render_to_response('pages/success.html',{},
+                context_instance=RequestContext(request))
+
+
+@never_cache
 def my_shirt_list(request):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -87,27 +133,20 @@ def my_shirt_list(request):
                 context_instance=RequestContext(request))
 
 
-def validate_file_extension(value):
-    if not value.name.endswith('.png'):
-        raise ValidationError(u'Image must be a .png.')
-
-class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=False, validators=[validate_file_extension])
-    additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
-
-
 def unauthorized(request):
-    return render_to_response('pages/unauthorized.html',
-               {},
+    return render_to_response('pages/unauthorized.html',{},
                 context_instance=RequestContext(request))
 
 
+@never_cache
+@csrf_exempt
 def designer(request):
-    return render_to_response('pages/designer.html',
-               {},
+    return render_to_response('pages/designer.html',{},
                 context_instance=RequestContext(request))
 
 
+@never_cache
+@csrf_protect
 def edit_shirt(request, shirt_id):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -149,6 +188,8 @@ def edit_shirt(request, shirt_id):
                 context_instance=RequestContext(request))
 
 
+@never_cache
+@csrf_protect
 def create_shirt_form(request):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -160,6 +201,7 @@ def create_shirt_form(request):
     form = TShirtForm(auto_id=True)
     if request.method == "POST":
         form = TShirtForm(request.POST, request.FILES, auto_id=True)
+
         if form.is_valid():
             logo = form.cleaned_data['logo']
             additional_instructions = form.cleaned_data['additional_instructions']
