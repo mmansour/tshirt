@@ -88,6 +88,7 @@ def tool_edit(request, shirt_id):
             out = open('{0}{1}'.format(curpath, imagename), 'wb+')
             out.write(logo)
             out.close()
+            return HttpResponse('Edited')
         return HttpResponse('Page Edited')
     return HttpResponse('Edit Page')
 
