@@ -94,6 +94,10 @@ a.btn_home_signup{background-color:#000000;}
 .panel{padding:0 20px 0 0; margin: -3px 0 47px 0;
         line-height:170%; float:right;}
 
+.middle{margin:0 0 0 17px;}
+#contact-form{clear:both;}
+#myshirts{clear:both;}
+
 /*.nav-list>.active>a,.nav-list>.active>a:hover{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.2);background-color:red;}*/
 
 /*.navbar-search .search-query{*/
