@@ -98,6 +98,7 @@ def success(request):
                 context_instance=RequestContext(request))
 
 
+@csrf_protect
 def my_shirt_list(request):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -120,6 +121,12 @@ def unauthorized(request):
 @csrf_exempt
 def designer(request):
     return render_to_response('pages/designer.html',{},
+                context_instance=RequestContext(request))
+
+
+@csrf_protect
+def home(request):
+    return render_to_response('index.html',{},
                 context_instance=RequestContext(request))
 
 
