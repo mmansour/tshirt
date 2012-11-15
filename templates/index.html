@@ -1,47 +1,74 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-
 {% block meta_title %}{% trans "Home" %}{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $("a.btn_home_login").click(function(event) {
+    event.preventDefault();
+    $("form#formID").submit();
+    });
+});
+</script>
+{% endblock %}
 
 {% block title %}
 {% trans "Home" %}
 {% endblock %}
 
-{% block breadcrumb_menu %}
-<li class="active">{% trans "Home" %}</li>
-{% endblock %}
+{#{% block breadcrumb_menu %}#}
+{#<li class="active">{% trans "Home" %}</li>#}
+{#{% endblock %}#}
 
-{% block main %}
-{% trans "Home" %}
-
+{% block jumbotron %}
+{#<hr style=""/>#}
 {% if not user.is_authenticated %}
+<div id="home-jumbo-not-logged">
+
 <fieldset>
-<form method="post" action="/accounts/login/">
+<form method="post" action="/accounts/login/" id="formID">
+
 {% csrf_token %}
-<div class="control-group input_id_username">
+<div id="home-form-actions">
+{#<input class="btn_home btn-large-home" type="submit" value="Login">#}
+
+<a href="{% url signup %}?next={{ request.path }}"
+    class="btn_home btn_home_login" id="home_login">{% trans "LOG IN" %}</a>
+
+<a href="{% url signup %}?next={{ request.path }}"
+    class="btn_home btn_home_signup">{% trans "SIGN UP" %}</a>
+</div>
+
+<div class="control-group control-group_home input_id_username input_id_username_home">
     <label for="id_username">Username or email address</label>
-    <div class="controls">
-        <input autofocus="" required="" type="text" name="username" id="id_username" />
+    <div class="controls input_id_username_home">
+        <input autofocus="" required="" type="text" name="username" id="id_username"/>
         <span class="help-inline"></span>
     </div>
 </div>
 
-<div class="control-group input_id_password">
+<div class="control-group control-group_home input_id_password input_id_password_home">
     <label for="id_password">Password</label>
-    <div class="controls">
+    <div class="controls input_id_password_home">
         <input required="" type="password" name="password" id="id_password" />
         <span class="help-inline"></span>
     </div>
 </div>
     
-<div class="form-actions">
-    <input class="btn btn-primary btn-large" type="submit" value="Login">
-    <a href="{% url signup %}?next={{ request.path }}"
-        class="btn btn-primary btn-large">{% trans "Sign up" %}</a>
-</div>
 </form>
 </fieldset>
-{% endif %}
+</div>
+{% else %}
+
+    <div id="home-jumbo-logged-in">
+    &nbsp;
+    </div>
     
+{% endif %}
+{% endblock %}
+
+
+{% block main %}
 {% endblock %}
