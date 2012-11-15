@@ -20,13 +20,13 @@
 {% endblock %}
 
 {% block main %}
-
-    Edit Shirt: {{ tshirt.user }}
+    <div id="edit">
+    <h2>Edit Shirt: {{ tshirt.user }}</h2>
 
     <form enctype="multipart/form-data" action="/my-tshirts/edit/{{ tshirt.id }}/" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
     </form>
-    
+    </div>
 {% endblock %}
