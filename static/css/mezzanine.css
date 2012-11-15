@@ -78,16 +78,21 @@ a.btn_home_signup{background-color:#000000;}
 .social{background-color:red; margin: -11px 27px 0 27px; height:35px; padding: 0 0 17px 0;
     background:transparent url('/static/img/social-icons.png') no-repeat right top;}
 
-.nav {margin:17px 0 0 0; float:left; background: none;}
+.nav {margin:0 0 0 0; float:left; background: none;}
 .nav li{list-style:none; display:inline; margin:13px 25px 13px 25px;}
-.nav-list>li>a{padding:13px 25px 13px 25px;display:inline;
+.nav-list>li>a{padding:13px 25px 13px 25px;
+    display:inline-block;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
-    background: #0085cf;}
+    background:#f6f4f4;
+    width:101px;
+    /*background: #0085cf;*/
+}
 
-.panel{background:rgba(220,220,220, 0.1); padding:10px 20px; margin-bottom:20px;
-        line-height:170%; border:1px solid #eee; border-radius:5px; float:right;}
+.panel{padding:0 20px 0 0; margin: -3px 0 47px 0;
+        line-height:170%; float:right;}
+
 /*.nav-list>.active>a,.nav-list>.active>a:hover{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.2);background-color:red;}*/
 
 /*.navbar-search .search-query{*/

@@ -25,6 +25,7 @@ $(document).ready(function(){
 {% block jumbotron %}
 {#<hr style=""/>#}
 {% if not user.is_authenticated %}
+<hr style=""/>
 <div id="home-jumbo-not-logged">
 
 <fieldset>
@@ -61,11 +62,9 @@ $(document).ready(function(){
 </fieldset>
 </div>
 {% else %}
-
     <div id="home-jumbo-logged-in">
     &nbsp;
     </div>
-    
 {% endif %}
 {% endblock %}
 
