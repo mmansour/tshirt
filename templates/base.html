@@ -56,12 +56,14 @@ $(function() {
             <a href="/" style="float:left;"><img src="{{ STATIC_URL }}img/rodeo-logo.png" alt="Rodeo Arcade" /></a>
            {% comment %} {% if settings.SITE_TITLE %}<a class="brand" href="/">{{ settings.SITE_TITLE }}</a>{% endif %}
             {% if settings.SITE_TAGLINE %}<p class="tagline">{{ settings.SITE_TAGLINE }}</p>{% endif %}{% endcomment %}
+            {% if user.is_authenticated %}
             <div class="site_search">
                 <form action="{% url search %}" class="navbar-search pull-right">
                 <input class="search-query" placeholder="{% trans "Search" %}" type="text" name="q" value="{{ request.REQUEST.q }}">
                 </form>
 {#                {% page_menu "pages/menus/dropdown.html" %}#}
             </div>
+            {% endif %}
         </div>
 {#    </div>#}
 </div>
