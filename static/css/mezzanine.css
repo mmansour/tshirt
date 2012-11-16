@@ -78,7 +78,7 @@ a.btn_home_signup{background-color:#000000;}
 .social{background-color:red; margin: -11px 27px 0 27px; height:35px; padding: 0 0 17px 0;
     background:transparent url('/static/img/social-icons.png') no-repeat right top;}
 
-.social ul {margin:0;text-indent: 999em; list-style: none}
+.social ul {margin:0;text-indent: -999em; list-style: none}
 .social li {float:right; }
 .social a {display:block; color:#FFFFFF; text-decoration:none; background: none;
     margin: 7px 7px 0 4px; height:23px; width:23px; }
