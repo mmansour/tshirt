@@ -100,7 +100,7 @@ a.btn_home_signup{background-color:#000000;}
 .panel{padding:0 20px 0 0; margin: -3px 0 47px 0;
         line-height:170%; float:right;font-family:"Courier New", "Times New Roman", serif;}
 
-.middle{margin:0 0 0 17px;}
+.middle{margin:0 0 0 17px; clear:both;}
 #contact-form{clear:both;}
 #myshirts{clear:both;}
 #success{clear:both;}

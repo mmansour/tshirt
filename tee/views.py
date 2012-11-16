@@ -58,13 +58,13 @@ def shirt_created(sender, instance, created, **kwargs):
     to='slackbabbath@gmail.com'
     creater_to = instance.user.email
 
-#    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-#    msg.attach_alternative(html_content, "text/html")
-#    msg.send()
-#
-#    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
-#    creator_msg.attach_alternative(creator_html_content, "text/html")
-#    creator_msg.send()
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+    creator_msg.attach_alternative(creator_html_content, "text/html")
+    creator_msg.send()
 
 def tool_edit(request, shirt_id):
     try:
