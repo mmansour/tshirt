@@ -75,7 +75,7 @@ a.btn_home_signup{background-color:#000000;}
     border-radius:0;
 }
 
-.social{background-color:red; margin: -11px 27px 0 27px; height:35px; padding: 0 0 17px 0;
+.social{background-color:red; margin: 1px 27px 0 27px; height:35px; padding: 0 0 17px 0;
     background:transparent url('/static/img/social-icons.png') no-repeat right top;}
 
 .social ul {margin:0;text-indent: -999em; list-style: none}
@@ -105,6 +105,8 @@ a.btn_home_signup{background-color:#000000;}
 #myshirts{clear:both;}
 #success{clear:both;}
 #edit{clear:both;}
+
+#instructions{background:#e8e8e8; height:360px; width:900px; margin: auto; padding: 0 0 0 0;}
 
 
 /*.nav-list>.active>a,.nav-list>.active>a:hover{color:#ffffff;text-shadow:0 -1px 0 rgba(0, 0, 0, 0.2);background-color:red;}*/

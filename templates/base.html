@@ -76,23 +76,11 @@ $(function() {
 {% endfor %}
 {% endnevercache %}
 
-
-{#<h1>{% block title %}{% endblock %}</h1>#}
-{##}
-{#<ul class="breadcrumb">#}
-{#{% spaceless %}#}
-{#{% block breadcrumb_menu %}{% page_menu "pages/menus/breadcrumb.html" %}{% endblock %}#}
-{#{% endspaceless %}#}
-{#</ul>#}
-
 </div>
 
 <div class="container">
 
     <div class="row">
-        {% comment %}<div class="span2 left">
-            <div class="panel tree">{% page_menu "pages/menus/tree.html" %}</div>
-        </div>{% endcomment %}
         {% if user.is_authenticated %}
             <hr style=""/>
         {% endif %}
@@ -106,25 +94,9 @@ $(function() {
         <div class="middle">
             {% block main %}{% endblock %}
         </div>
-
-{#        <div class="right">#}
-{% comment %}        {% if user.is_authenticated %}
-            {% nevercache %}
-            {% include "includes/user_panel.html" %}
-            {% endnevercache %}
-        {% endif %}{% endcomment %}
-            {% comment %}<div class="panel">
-            {% block right_panel %}
-            {% ifinstalled mezzanine.twitter %}
-            {% include "twitter/tweets.html" %}
-            {% endifinstalled %}
-            {% endblock %}
-            </div>{% endcomment %}
-{#        </div>#}
     </div>
 
     <div class="row">
-{#        <hr style=""/>#}
         {% block jumbotron %}{% endblock %}
     </div>
 
@@ -141,20 +113,7 @@ $(function() {
 <footer>
 <div class="container">
 {% page_menu "pages/menus/footer.html" %}
-<br style="clear:both">
-{% comment %}<p>
-    {% trans "Powered by" %}
-    <a href="http://mezzanine.jupo.org">Mezzanine</a>{% ifinstalled cartridge.shop %},
-    <a href="http://cartridge.jupo.org">Cartridge</a>{% endifinstalled %}
-    {% trans "and" %}
-    <a href="http://www.djangoproject.com">Django</a>
-    <span class="separator">|</span>
-    Theme by <a href="http://twitter.github.com/bootstrap/">Bootstrap</a>
-    {% ifinstalled mezzanine.mobile %}
-    <span class="separator">|</span>
-    <a href="{% url set_device "mobile" %}?next={{ request.path }}">{% trans "View Mobile Site" %}</a>
-    {% endifinstalled %}
-</p>{% endcomment %}
+{#<br style="clear:both">#}
 </div>
 </footer>
 
