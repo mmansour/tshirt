@@ -21,7 +21,7 @@ def validate_file_extension(value):
 
 class TShirtForm(forms.Form):
     logo = forms.ImageField(required=True, validators=[validate_file_extension])
-    additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
+    additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
 #TO avoid duplicated entries: see "if created"
@@ -148,7 +148,7 @@ def edit_shirt(request, shirt_id):
         return HttpResponseRedirect(redirect)
 
     init_data = {
-        'additional_instructions':tshirt.additional_instructions,
+        'additional_notes':tshirt.additional_instructions,
         'logo':"",
     }
 
@@ -157,7 +157,7 @@ def edit_shirt(request, shirt_id):
         form = TShirtForm(request.POST, request.FILES, auto_id=True)
         if form.is_valid():
             logo = form.cleaned_data['logo']
-            additional_instructions = form.cleaned_data['additional_instructions']
+            additional_instructions = form.cleaned_data['additional_notes']
 
             if not logo:
                 tshirt.logo = init_data['logo']
@@ -189,7 +189,7 @@ def create_shirt_form(request):
 
         if form.is_valid():
             logo = form.cleaned_data['logo']
-            additional_instructions = form.cleaned_data['additional_instructions']
+            additional_instructions = form.cleaned_data['additional_notes']
 
             obj = TShirt(title='Order from site',
                          user=request.user,

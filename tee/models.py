@@ -10,7 +10,7 @@ class TShirt(Displayable):
     logo = models.ImageField(upload_to="uploads", blank=True, null=True, default='uploads/25off.png')
     design_layout = models.ImageField(upload_to="uploads", blank=True, null=True, default='uploads/25off.png')
     color = models.CharField(max_length=400, verbose_name="Shirt Color", blank=True)
-    additional_instructions = models.TextField(verbose_name="Additional Instructions", blank=True)
+    additional_instructions = models.TextField(verbose_name="Additional Notes", blank=True)
     is_order_closed = models.BooleanField(blank=True, verbose_name="Order Closed?", default=False)
 
     def __unicode__(self):
