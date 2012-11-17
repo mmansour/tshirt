@@ -20,7 +20,7 @@ def validate_file_extension(value):
         raise ValidationError(u'Image must be a .png.')
 
 class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=False, validators=[validate_file_extension])
+    logo = forms.ImageField(required=True, validators=[validate_file_extension])
     additional_instructions = forms.CharField(widget=forms.Textarea, required=False)
 
 
@@ -118,8 +118,10 @@ def unauthorized(request):
                 context_instance=RequestContext(request))
 
 
-@csrf_exempt
+@csrf_protect
 def designer(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/')
     return render_to_response('pages/designer.html',{},
                 context_instance=RequestContext(request))
 
@@ -147,7 +149,7 @@ def edit_shirt(request, shirt_id):
 
     init_data = {
         'additional_instructions':tshirt.additional_instructions,
-        'logo':tshirt.logo,
+        'logo':"",
     }
 
     form = TShirtForm(auto_id=True, initial=init_data)
