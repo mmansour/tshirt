@@ -5,6 +5,7 @@
 *.swp
 *.sql
 *.db
+*.sh
 .idea/
 github-public.rtf
 manage.py
@@ -17,7 +18,7 @@ notes/
 .idea/
 log/
 migrations/
-static/media/
+static/media/uploads/
 !tee/urls.py
 
 
