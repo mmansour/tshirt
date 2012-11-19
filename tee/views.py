@@ -15,12 +15,12 @@ from django.views.decorators.csrf import csrf_exempt,  csrf_protect
 import os
 
 
-def validate_file_extension(value):
+def validate_file_extension(value): # add to for field: validators=[validate_file_extension]
     if not value.name.endswith('.png'):
         raise ValidationError(u'Image must be a .png.')
 
 class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=True, validators=[validate_file_extension])
+    logo = forms.ImageField(required=True,)
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 

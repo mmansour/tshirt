@@ -120,9 +120,12 @@ a.btn_home_signup{background-color:#000000;}
 #edit{clear:both;}
 
 #instructions{background:#e8e8e8; height:409px; width:900px; margin: auto; padding: 17px 0 0 0; text-align: center;}
-#instructions p{color:#737373; font-family:"Courier New", "Times New Roman", serif;
+#instructions p {color:#737373; font-family:"Courier New", "Times New Roman", serif;
     margin:0 17px 17px 17px; padding: 0 0 0 0;}
-#instructions h4{ color:#959595; font-size:17px;
+
+#instructions h3{ color:#737373; font-family:"Courier New", "Times New Roman", serif;}
+
+#instructions h4{ color:#737373; font-size:17px;
     margin:0 17px 0 17px; padding: 0 0 0 0;}
 
 #leftinstructions{float:left; width:423px; text-align: left; margin: 17px 0 0 17px;}
