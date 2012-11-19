@@ -15,7 +15,7 @@ from django.views.decorators.csrf import csrf_exempt,  csrf_protect
 import os
 
 
-def validate_file_extension(value): # add to for field: validators=[validate_file_extension]
+def validate_file_extension(value): # add to logo field to activate: validators=[validate_file_extension]
     if not value.name.endswith('.png'):
         raise ValidationError(u'Image must be a .png.')
 
@@ -84,6 +84,7 @@ def tool_edit(request, shirt_id):
         else:
             logo = request.body
             imagename = str(tshirt.logo.url)
+            print "image name: %s" % imagename
             curpath = os.path.abspath(os.curdir)
             out = open('{0}{1}'.format(curpath, imagename), 'wb+')
             out.write(logo)
