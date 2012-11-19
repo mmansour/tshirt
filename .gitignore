@@ -17,7 +17,7 @@ notes/
 .idea/
 log/
 migrations/
-static/media/
+static/media/uploads/
 !tee/urls.py
 
 
