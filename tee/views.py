@@ -16,11 +16,13 @@ import os
 
 
 def validate_file_extension(value): # add to logo field to activate: validators=[validate_file_extension]
-    if not value.name.endswith('.png'):
-        raise ValidationError(u'Image must be a .png.')
+#    if not value.name.endswith('.png'):
+#        raise ValidationError(u'Image must be a .png.')
+    if value.name.endswith('.jpeg'):
+        value.name.replace('.jpeg', '.jpg')
 
 class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=True,)
+    logo = forms.ImageField(required=True)
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
@@ -58,13 +60,13 @@ def shirt_created(sender, instance, created, **kwargs):
     to='slackbabbath@gmail.com'
     creater_to = instance.user.email
 
-#    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-#    msg.attach_alternative(html_content, "text/html")
-#    msg.send()
-#
-#    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
-#    creator_msg.attach_alternative(creator_html_content, "text/html")
-#    creator_msg.send()
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+
+    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+    creator_msg.attach_alternative(creator_html_content, "text/html")
+    creator_msg.send()
 
 def tool_edit(request, shirt_id):
     try:
@@ -90,10 +92,8 @@ def tool_edit(request, shirt_id):
             new_logo_filename = "{0}-{1}".format(tshirt.id,imagename[22:])
             new_upload_path = "{0}{1}".format(image_url_path, new_logo_filename)
             curpath = os.path.abspath(os.curdir)
-
 #            print 'New Upload {0}{1}'.format(curpath, new_upload_path)
 #            print "new upload path {0}".format(new_upload_path[14:])
-
             out = open('{0}{1}'.format(curpath, new_upload_path), 'wb+')
             out.write(logo)
             out.close()

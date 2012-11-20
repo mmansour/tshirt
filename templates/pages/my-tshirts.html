@@ -23,7 +23,7 @@
 <div id="myshirts">
 <ul>
 {% for s in shirt_list %}
-    <li><a href="edit/{{ s.id }}">Order # {{ s.id }}</a></li>
+    <li><a href="edit/{{ s.id }}">Order # {{ s.id }}</a> - {{ s.publish_date }}</li>
 {% endfor %}
 </ul>
 </div>
