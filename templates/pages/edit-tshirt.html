@@ -25,10 +25,12 @@
 
     <h3>Edit T-Shirt</h3>
     <h3>Re-upload logo to edit shirt # {{ tshirt.id }}</h3>
+    <div id="contact-form">
     <form enctype="multipart/form-data" action="/my-tshirts/edit/{{ tshirt.id }}/" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Upload Image" />
     </form>
+    </div>
     </div>
 {% endblock %}

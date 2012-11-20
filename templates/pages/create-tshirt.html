@@ -3,35 +3,31 @@
 
 {% block meta_title %}Create TShirt{% endblock %}
 
-{#{% block meta_keywords %}{% metablock %}#}
-{#{% keywords_for page as keywords %}#}
-{#{% for keyword in keywords %}#}
-{#    {% if not forloop.first %}, {% endif %}#}
-{#    {{ keyword }}#}
-{#{% endfor %}#}
-{#{% endmetablock %}{% endblock %}#}
-
-{#{% block meta_description %}{% metablock %}#}
-{#{{ page.description }}#}
-{#{% endmetablock %}{% endblock %}#}
-
-{% block title %}
-    Create TShirt
+{% block extra_js %}
+<script type="text/javascript">
+{# SUBMIT FOR ANCHOR CLICK #}
+$(document).ready(function(){
+//    alert($('#logo:input').val());
+    $('#logo:input').focus(function(event) {
+        alert($('#logo:input').val());
+    });
+});
+</script>
 {% endblock %}
+
+{% block title %}Create TShirt{% endblock %}
 
 {% block main %}
 
 <div id="contact-form">
-<h3>
-Upload your image and additional notes.
-</h3>
+<h3>Upload your image and additional notes.</h3>
 
 {#<h4 style="color:#0088CC;">Use PNG images for transparent backgrounds.</h4>#}
 
 <form enctype="multipart/form-data" action="/create-tshirt/" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Upload Image" />
 </form>
 
 </div>
