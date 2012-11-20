@@ -58,13 +58,13 @@ def shirt_created(sender, instance, created, **kwargs):
     to='slackbabbath@gmail.com'
     creater_to = instance.user.email
 
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
-
-    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
-    creator_msg.attach_alternative(creator_html_content, "text/html")
-    creator_msg.send()
+#    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+#    msg.attach_alternative(html_content, "text/html")
+#    msg.send()
+#
+#    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+#    creator_msg.attach_alternative(creator_html_content, "text/html")
+#    creator_msg.send()
 
 def tool_edit(request, shirt_id):
     try:
@@ -84,11 +84,21 @@ def tool_edit(request, shirt_id):
         else:
             logo = request.body
             imagename = str(tshirt.logo.url)
-            print "image name: %s" % imagename
+            image_url_path = imagename[:22]
+#            original_upload_path = imagename[14:]
+#            original_upload_filename = imagename[22:]
+            new_logo_filename = "{0}-{1}".format(tshirt.id,imagename[22:])
+            new_upload_path = "{0}{1}".format(image_url_path, new_logo_filename)
             curpath = os.path.abspath(os.curdir)
-            out = open('{0}{1}'.format(curpath, imagename), 'wb+')
+
+#            print 'New Upload {0}{1}'.format(curpath, new_upload_path)
+#            print "new upload path {0}".format(new_upload_path[14:])
+
+            out = open('{0}{1}'.format(curpath, new_upload_path), 'wb+')
             out.write(logo)
             out.close()
+            tshirt.logo = new_upload_path[14:]
+            tshirt.save()
             return HttpResponse('Edited')
         return HttpResponse('Page Edited')
     return HttpResponse('Edit Page')
