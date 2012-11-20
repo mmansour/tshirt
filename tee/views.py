@@ -16,13 +16,13 @@ import os
 
 
 def validate_file_extension(value): # add to logo field to activate: validators=[validate_file_extension]
-#    if not value.name.endswith('.png'):
-#        raise ValidationError(u'Image must be a .png.')
-    if value.name.endswith('.jpeg'):
-        value.name.replace('.jpeg', '.jpg')
+    if not value.name.endswith('.png'):
+        raise ValidationError(u'Image must be a .png.')
+#    if value.name.endswith('.jpeg'):
+#        value.name.replace('.jpeg', '.jpg')
 
 class TShirtForm(forms.Form):
-    logo = forms.ImageField(required=True)
+    logo = forms.ImageField(required=True, validators=[validate_file_extension])
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
