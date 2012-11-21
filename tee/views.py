@@ -79,21 +79,13 @@ def tool_edit(request, shirt_id):
     tshirt = TShirt.objects.get(id=shirt_id)
 
     if request.method == "POST":
-#        if request.GET.get('color', 'false')=='true':
-#            color = request.POST.get('col')
-#            tshirt.color = color
-#            tshirt.save()
-#        else:
         logo = request.body
         imagename = str(tshirt.logo.url)
         image_url_path = imagename[:22]
-#            original_upload_path = imagename[14:]
-#            original_upload_filename = imagename[22:]
-        new_logo_filename = "{0}-{1}".format(tshirt.id,imagename[22:])
+        image_file_name = imagename[22:]
+        new_logo_filename = "{0}-{1}".format(tshirt.id, image_file_name)
         new_upload_path = "{0}{1}".format(image_url_path, new_logo_filename)
         curpath = os.path.abspath(os.curdir)
-#            print 'New Upload {0}{1}'.format(curpath, new_upload_path)
-#            print "new upload path {0}".format(new_upload_path[14:])
         out = open('{0}{1}'.format(curpath, new_upload_path), 'wb+')
         out.write(logo)
         out.close()
