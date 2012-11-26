@@ -96,6 +96,11 @@ def tool_edit(request, shirt_id):
     return HttpResponse('Edit Page')
 
 
+def preview(request, shirt_id):
+    return render_to_response('pages/preview.html',{},
+                context_instance=RequestContext(request))
+
+
 def success(request):
     return render_to_response('pages/success.html',{},
                 context_instance=RequestContext(request))

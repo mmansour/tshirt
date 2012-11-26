@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}Preview your Design!{% endblock %}
+
+{#{% block meta_keywords %}{% metablock %}#}
+{#{% keywords_for page as keywords %}#}
+{#{% for keyword in keywords %}#}
+{#    {% if not forloop.first %}, {% endif %}#}
+{#    {{ keyword }}#}
+{#{% endfor %}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{#{% block meta_description %}{% metablock %}#}
+{#{{ page.description }}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{% block title %}
+    Here is how your shirt looks. If you wish to make changes please click here to start over.
+{% endblock %}
+
+{% block main %}
+    <div id="success">
+    <p>Here is how your shirt looks. If you wish to make changes please click here to start over.</p>
+    </div>
+{% endblock %}
