@@ -21,6 +21,17 @@
 
 {% block main %}
     <div id="success">
+    Shirt ID: {{ shirt_id }}
     <p>Here is how your shirt looks. If you wish to make changes please click here to start over.</p>
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+        codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"
+        width="400" height="400" id="test1">
+        <param name="movie" value="{{ STATIC_URL }}media/Prev.swf" />
+        <embed src="{{ STATIC_URL }}media/Prev.swf"
+            width="400" height="400"
+            name="test1"
+            type="application/x-shockwave-flash"
+            pluginspage="http://www.adobe.com/go/getflashplayer"></embed>
+</object>
     </div>
 {% endblock %}

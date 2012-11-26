@@ -96,8 +96,21 @@ def tool_edit(request, shirt_id):
     return HttpResponse('Edit Page')
 
 
+@csrf_protect
 def preview(request, shirt_id):
-    return render_to_response('pages/preview.html',{},
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt = TShirt.objects.get(id=shirt_id)
+
+    if request.user != tshirt.user:
+        return HttpResponseRedirect('/forbidden/')
+    
+    return render_to_response('pages/preview.html',{'shirt_id':shirt_id},
                 context_instance=RequestContext(request))
 
 
