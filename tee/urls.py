@@ -6,7 +6,7 @@ from mezzanine.core.views import direct_to_template
 
 urlpatterns = patterns('tee.views',
     url("^$", "home", name="home"),
-    (r'^success/$', 'success'),
+    (r'^success/(?P<shirt_id>\d+)/$', 'success'),
     (r'^preview/(?P<shirt_id>\d+)/$', 'preview'),
     (r'^create-tshirt/$', 'create_shirt_form'),
     (r'^designer/$', 'designer'),

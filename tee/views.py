@@ -25,40 +25,63 @@ class TShirtForm(forms.Form):
     logo = forms.ImageField(required=True, validators=[validate_file_extension])
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
-
+####################################################### SIGNALS
 #TO avoid duplicated entries: see "if created"
-@receiver(post_save, sender=User, dispatch_uid='views')
-def user_created(sender, instance, created, **kwargs):
-    if created:
-        print("User Added")
+#@receiver(post_save, sender=User, dispatch_uid='views')
+#def user_created(sender, instance, created, **kwargs):
+#    if created:
+#        print("User Added")
 
-        
+
 #UPON SHIRT CREATION OR UPDATE SEND AN EMAIL TO RODEO and CREATOR
-@receiver(post_save, sender=TShirt, dispatch_uid='views')
-def shirt_created(sender, instance, created, **kwargs):
-    if created:
-        #TO Rodeo
-        subject = 'New shirt created by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
-        text_content = '{0} {1} has created a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
-        html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
+#@receiver(post_save, sender=TShirt, dispatch_uid='views')
+#def shirt_created(sender, instance, created, **kwargs):
+#    if created:
+#        #TO Rodeo
+#        subject = 'New shirt created by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
+#        text_content = '{0} {1} has created a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
+#        html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
+#
+#        creator_subject = "Your design has been uploaded"
+#        creator_text_content = "Your design has been uploaded."
+#        creator_html_content = "Your design has been uploaded."
+#
+#    else:
+#        #TO Rodeo
+#        subject = 'Shirt edited by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
+#        text_content = '{0} {1} has edited a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
+#        html_content = '{0} {1} has edited a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
+#
+#        creator_subject = "Your design has been edited"
+#        creator_text_content = "Your design has been edited."
+#        creator_html_content = "Your design has been edited."
+#
+#    from_email='matt.mansour@makerstudios.com'
+#    to='slackbabbath@gmail.com'
+#    creater_to = instance.user.email
+#
+#    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+#    msg.attach_alternative(html_content, "text/html")
+#    msg.send()
+#
+#    creator_msg = EmailMultiAlternatives(creator_subject, creator_text_content, from_email, [creater_to])
+#    creator_msg.attach_alternative(creator_html_content, "text/html")
+#    creator_msg.send()
 
-        creator_subject = "Your design has been uploaded"
-        creator_text_content = "Your design has been uploaded."
-        creator_html_content = "Your design has been uploaded."
+# New Email Function
+def email_shirt_created(request, order_id):
+    #TO Rodeo
+    subject = 'New shirt created by {0} {1}'.format(request.user.first_name, request.user.last_name)
+    text_content = '{0} {1} has created a shirt. Order # {2}'.format(request.user.first_name, request.user.last_name, order_id)
+    html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(request.user.first_name, request.user.last_name, order_id)
 
-    else:
-        #TO Rodeo
-        subject = 'Shirt edited by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
-        text_content = '{0} {1} has edited a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
-        html_content = '{0} {1} has edited a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
-
-        creator_subject = "Your design has been edited"
-        creator_text_content = "Your design has been edited."
-        creator_html_content = "Your design has been edited."
+    creator_subject = "Your design has been uploaded"
+    creator_text_content = "Your design has been uploaded."
+    creator_html_content = "Your design has been uploaded."
 
     from_email='matt.mansour@makerstudios.com'
     to='slackbabbath@gmail.com'
-    creater_to = instance.user.email
+    creater_to = request.user.email
 
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
@@ -68,6 +91,7 @@ def shirt_created(sender, instance, created, **kwargs):
     creator_msg.attach_alternative(creator_html_content, "text/html")
     creator_msg.send()
 
+        
 def tool_edit(request, shirt_id):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -109,12 +133,27 @@ def preview(request, shirt_id):
 
     if request.user != tshirt.user:
         return HttpResponseRedirect('/forbidden/')
-    
+        
     return render_to_response('pages/preview.html',{'shirt_id':shirt_id},
                 context_instance=RequestContext(request))
 
 
-def success(request):
+@csrf_protect
+def success(request, shirt_id):
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt = TShirt.objects.get(id=shirt_id)
+
+    if request.user != tshirt.user:
+        return HttpResponseRedirect('/forbidden/')
+
+    email_shirt_created(request, tshirt.id)
+    
     return render_to_response('pages/success.html',{},
                 context_instance=RequestContext(request))
 
@@ -134,6 +173,7 @@ def my_shirt_list(request):
                 context_instance=RequestContext(request))
 
 
+@csrf_protect
 def unauthorized(request):
     return render_to_response('pages/unauthorized.html',{},
                 context_instance=RequestContext(request))
