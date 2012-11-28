@@ -145,7 +145,7 @@ a.btn_preview{background-color:#0083d2;}
 #success{clear:both;}
 #edit{clear:both;}
 #preview{float:left;}
-#submitorder{float:left; margin: 200px 0 0 17px;}
+#submitorder{float:left; margin: 7px 0 0 17px;}
 
 #instructions{background:#e8e8e8; height:409px; width:900px; margin: auto; padding: 17px 0 0 0; text-align: center;}
 #instructions p {color:#737373; font-family:"Courier New", "Times New Roman", serif;

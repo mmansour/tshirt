@@ -12,7 +12,7 @@ class TShirtAdmin(DisplayableAdmin):
         ("User",            {'fields': ['user']}),
         ("Images",            {'fields': ['logo','design_layout',]}),
         ("Text",            {'fields': ['shirt_text',]}),
-        ("Color",            {'fields': ['color',]}),
+        ("Size",            {'fields': ['size',]}),
         ("Additional Instructions",            {'fields': ['additional_instructions',]}),
     ]
 
@@ -20,7 +20,7 @@ class TShirtAdmin(DisplayableAdmin):
         return u'<a href="/static/media/%s">%s</a>' % (obj.logo, obj.logo)
     logo_link.allow_tags = True
 
-    list_display = ('user','title', 'logo_link','color' ,'additional_instructions' ,'publish_date', 'is_order_closed',)
+    list_display = ('user','title', 'logo_link','size','additional_instructions' ,'publish_date', 'is_order_closed',)
     list_display_links = ('user',)
     list_editable = ('is_order_closed',)
     list_filter = ['user','is_order_closed', 'publish_date',]

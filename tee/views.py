@@ -21,11 +21,23 @@ def validate_file_extension(value): # add to logo field to activate: validators=
 #    if value.name.endswith('.jpeg'):
 #        value.name.replace('.jpeg', '.jpg')
 
+SIZES = (
+    ('Size', 'Size'),
+    ('Small', 'Small'),
+    ('Medium', 'Medium'),
+    ('Large', 'Large'),
+    ('XLarge', 'XLarge'),
+    ('2XLarge', '2XLarge'),
+    ('3XLarge', '3XLarge'),
+)
+
 class TShirtLogo(forms.Form):
     logo = forms.ImageField(required=True, validators=[validate_file_extension])
 
 
 class TShirtInstructions(forms.Form):
+    name_of_shirt = forms.CharField(required=True,)
+    size = forms.ChoiceField(choices=SIZES)
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
@@ -98,8 +110,9 @@ def preview(request, shirt_id):
     if request.method == "POST":
         form = TShirtInstructions(request.POST, auto_id=True)
         if form.is_valid():
-            additional_notes = form.cleaned_data['additional_notes']
-            tshirt.additional_instructions = additional_notes
+            tshirt.title = form.cleaned_data['name_of_shirt']
+            tshirt.size = form.cleaned_data['size']
+            tshirt.additional_instructions = form.cleaned_data['additional_notes']
             tshirt.save()
 
             redirect = "/success/{0}/".format(tshirt.id)
