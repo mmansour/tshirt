@@ -38,6 +38,7 @@ class TShirtLogo(forms.Form):
 class TShirtInstructions(forms.Form):
     name_of_shirt = forms.CharField(required=True,)
     size = forms.ChoiceField(choices=SIZES)
+#    color = forms.HiddenInput()
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
@@ -106,6 +107,9 @@ def preview(request, shirt_id):
     if request.user != tshirt.user:
         return HttpResponseRedirect('/forbidden/')
 
+    tshirt.color = request.GET.get('col', 'white')
+    tshirt.save()
+
     form = TShirtInstructions(auto_id=True)
     if request.method == "POST":
         form = TShirtInstructions(request.POST, auto_id=True)
@@ -118,7 +122,7 @@ def preview(request, shirt_id):
             redirect = "/success/{0}/".format(tshirt.id)
             return HttpResponseRedirect(redirect)
         
-    return render_to_response('pages/preview.html',{'shirt_id':shirt_id, 'form':form},
+    return render_to_response('pages/preview.html',{'tshirt':tshirt, 'form':form},
                 context_instance=RequestContext(request))
 
 

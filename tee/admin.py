@@ -12,7 +12,7 @@ class TShirtAdmin(DisplayableAdmin):
         ("User",            {'fields': ['user']}),
         ("Images",            {'fields': ['logo','design_layout',]}),
         ("Text",            {'fields': ['shirt_text',]}),
-        ("Size",            {'fields': ['size',]}),
+        ("Size and Color",            {'fields': ['size','color']}),
         ("Additional Instructions",            {'fields': ['additional_instructions',]}),
     ]
 
