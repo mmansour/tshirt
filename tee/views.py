@@ -110,12 +110,19 @@ def preview(request, shirt_id):
     tshirt.color = request.GET.get('col', 'white')
     tshirt.save()
 
-    form = TShirtInstructions(auto_id=True)
+    init_data = {
+        'name_of_shirt':tshirt.title,
+        'size':tshirt.size,
+        'additional_notes':tshirt.additional_instructions,
+    }
+
+    form = TShirtInstructions(auto_id=True, initial=init_data)
     if request.method == "POST":
         form = TShirtInstructions(request.POST, auto_id=True)
         if form.is_valid():
             tshirt.title = form.cleaned_data['name_of_shirt']
             tshirt.size = form.cleaned_data['size']
+            tshirt.order_submission_status = "Submitted"
             tshirt.additional_instructions = form.cleaned_data['additional_notes']
             tshirt.save()
 
@@ -239,6 +246,7 @@ def create_shirt_form(request):
             obj = TShirt(title='Order from site',
                          user=request.user,
                          logo=logo,
+                         order_submission_status = "Started",
                          is_order_closed=False)
             obj.save()
 

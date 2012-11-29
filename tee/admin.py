@@ -7,7 +7,7 @@ class TShirtAdmin(DisplayableAdmin):
     fieldsets = [
         ("Title",                       {'fields': ['title']}),
         ("Published Date",              {'fields': ['publish_date']}),
-        ("Published Status",            {'fields': ['status']}),
+        ("Published Status",            {'fields': ['status', 'order_submission_status']}),
         ("Order Closed?",            {'fields': ['is_order_closed']}),
         ("User",            {'fields': ['user']}),
         ("Images",            {'fields': ['logo','design_layout',]}),
@@ -20,10 +20,10 @@ class TShirtAdmin(DisplayableAdmin):
         return u'<a href="/static/media/%s">%s</a>' % (obj.logo, obj.logo)
     logo_link.allow_tags = True
 
-    list_display = ('user','title', 'logo_link','size','additional_instructions' ,'publish_date', 'is_order_closed',)
+    list_display = ('user', 'title', 'order_submission_status', 'logo_link','size','additional_instructions' ,'publish_date', 'is_order_closed',)
     list_display_links = ('user',)
     list_editable = ('is_order_closed',)
-    list_filter = ['user','is_order_closed', 'publish_date',]
+    list_filter = ['order_submission_status','is_order_closed', 'publish_date',]
     search_fields = ['title',]
     date_hierarchy = 'publish_date'
 

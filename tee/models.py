@@ -12,6 +12,7 @@ class TShirt(Displayable):
     color = models.CharField(max_length=400, verbose_name="Shirt Color", blank=True)
     size = models.CharField(max_length=400, verbose_name="Size", blank=True)
     additional_instructions = models.TextField(verbose_name="Additional Notes", blank=True)
+    order_submission_status = models.CharField(max_length=40, verbose_name="Submission Status", blank=True, null=True)
     is_order_closed = models.BooleanField(blank=True, verbose_name="Order Closed?", default=False)
 
     def __unicode__(self):
