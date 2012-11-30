@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load mezzanine_tags keyword_tags %}
+
+{% block meta_title %}Preview your Design!{% endblock %}
+
+{#{% block meta_keywords %}{% metablock %}#}
+{#{% keywords_for page as keywords %}#}
+{#{% for keyword in keywords %}#}
+{#    {% if not forloop.first %}, {% endif %}#}
+{#    {{ keyword }}#}
+{#{% endfor %}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{#{% block meta_description %}{% metablock %}#}
+{#{{ page.description }}#}
+{#{% endmetablock %}{% endblock %}#}
+
+{% block extra_js %}
+<script type="text/javascript">
+{# SUBMIT FOR ANCHOR CLICK #}
+$(document).ready(function(){
+$("a#btn_submit").click(function(event) {
+    event.preventDefault();
+//    alert('hit');
+    $("form#create-shirt").submit();
+});
+
+{# SUBMIT FOR ON ENTER PRESS #}
+//$(window).keyup(function(e){
+//    var code = e.which;
+//    if(code==13)e.preventDefault();
+//    if(code==32||code==13||code==188||code==186){
+//        $("form#create-shirt").submit();
+//    }
+//});
+});
+</script>
+{% endblock %}
+
+{% block title %}
+    Here is how your shirt looks. If you wish to make changes please click here to start over.
+{% endblock %}
+
+{% block main %}
+    <div id="preview">
+    <h3>Preview Shirt</h3>
+    <ul>
+    <li>If you wish to make changes please the EDIT SHIRT button.</li>
+    <li>If you like your shirt please click the SUBMIT ORDER button.</li>
+    </ul>
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+        codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab"
+        width="400" height="420" id="test1">
+        <param name="movie" value="{{ STATIC_URL }}media/Prev.swf" />
+        <embed src="{{ STATIC_URL }}media/Prev.swf"
+            width="400" height="420"
+            name="test1"
+            type="application/x-shockwave-flash"
+            pluginspage="http://www.adobe.com/go/getflashplayer"></embed>
+    </object>
+    </div>
+    <div id="submitorder">
+
+    <form enctype="multipart/form-data" action="/preview/{{ tshirt.id }}/?logo={{ tshirt.logo }}&col={{ tshirt.color }}" method="post" id="create-shirt" autocomplete="on">
+    {% csrf_token %}
+    {{ form.as_p }}
+    </form>
+
+    <a href="/my-tshirts/edit/{{ tshirt.id }}/" class="btn_home btn_preview">EDIT SHIRT</a>
+        <br /><br />
+    <a href="#" class="btn_home btn_preview" id="btn_submit">SUBMIT ORDER</a>
+
+    </div>
+
+{% endblock %}

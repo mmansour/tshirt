@@ -21,10 +21,8 @@
 
 {% block main %}
     <div id="edit">
-    <h2>View Current Logo: <a target="_blank" href="{{ STATIC_URL }}media/{{ tshirt.logo }}">{{ tshirt.logo }}</a></h2>
-
-    <h3>Edit T-Shirt</h3>
-    <h3>Re-upload logo to edit shirt # {{ tshirt.id }}</h3>
+    <h2><a target="_blank" href="{{ STATIC_URL }}media/{{ tshirt.logo }}">View Current Logo</a> for <em>{{ tshirt.title }}</em></h2>
+    <h3> To edit <em><a href="/preview/{{ tshirt.id }}/?logo={{ tshirt.logo }}&col={{ tshirt.color }}">{{ tshirt.title }}</a></em> please upload your new logo</h3>
     <div id="contact-form">
     <form enctype="multipart/form-data" action="/my-tshirts/edit/{{ tshirt.id }}/" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}

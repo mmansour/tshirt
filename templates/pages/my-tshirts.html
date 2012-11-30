@@ -23,7 +23,9 @@
 <div id="myshirts">
 <ul>
 {% for s in shirt_list %}
-    <li><a href="edit/{{ s.id }}">Order # {{ s.id }}</a> - {{ s.publish_date }}</li>
+{#    <li><a href="edit/{{ s.id }}">Order # {{ s.id }}</a> - {{ s.publish_date }}</li>#}
+    <li><a href="/preview/{{ s.id }}/?logo={{ s.logo }}&col={{ s.color }}">{{ s.title }} | Order # {{ s.id }}</a> - {{ s.publish_date }}</li>
+
 {% endfor %}
 </ul>
 </div>

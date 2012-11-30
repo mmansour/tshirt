@@ -61,6 +61,8 @@ a.btn_home_signup{background-color:#000000;}
 .btn_home_login:hover,.btn_home_login:active,.btn_home_login.active,.btn_home_login.disabled,.btn_home_login[disabled]{background-color:#000000;}
 .btn_home_signup:hover,.btn_home_signup:active,.btn_home_signup.active,.btn_home_signup.disabled,.btn_home_signup[disabled]{background-color:#0083d2;}
 
+a.btn_preview{background-color:#0083d2;}
+
 .site_search{margin: 51px 17px 0 0;}
 .navbar{margin:0 0 0 0;}
 
@@ -129,19 +131,21 @@ a.btn_home_signup{background-color:#000000;}
 
 #contact-form input[type="submit"]{
     height:48px;
-    width:248px;
+    width:148px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
     background-color:#0088CC;
     color:#FFF;
-    margin: 21px 0 0 242px;
+    margin: 0 0 0 117px;
 }
 
 
 #myshirts{clear:both;}
 #success{clear:both;}
 #edit{clear:both;}
+#preview{float:left;}
+#submitorder{float:left; margin: 7px 0 0 17px;}
 
 #instructions{background:#e8e8e8; height:409px; width:900px; margin: auto; padding: 17px 0 0 0; text-align: center;}
 #instructions p {color:#737373; font-family:"Courier New", "Times New Roman", serif;

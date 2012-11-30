@@ -21,44 +21,41 @@ def validate_file_extension(value): # add to logo field to activate: validators=
 #    if value.name.endswith('.jpeg'):
 #        value.name.replace('.jpeg', '.jpg')
 
-class TShirtForm(forms.Form):
+SIZES = (
+    ('Size', 'Size'),
+    ('Small', 'Small'),
+    ('Medium', 'Medium'),
+    ('Large', 'Large'),
+    ('XLarge', 'XLarge'),
+    ('2XLarge', '2XLarge'),
+    ('3XLarge', '3XLarge'),
+)
+
+class TShirtLogo(forms.Form):
     logo = forms.ImageField(required=True, validators=[validate_file_extension])
+
+
+class TShirtInstructions(forms.Form):
+    name_of_shirt = forms.CharField(required=True,)
+    size = forms.ChoiceField(choices=SIZES)
+#    color = forms.HiddenInput()
     additional_notes = forms.CharField(widget=forms.Textarea, required=False,)
 
 
-#TO avoid duplicated entries: see "if created"
-@receiver(post_save, sender=User, dispatch_uid='views')
-def user_created(sender, instance, created, **kwargs):
-    if created:
-        print("User Added")
+# New Email Function
+def email_shirt_created(request, order_id):
+    #TO Rodeo
+    subject = 'New shirt created by {0} {1}'.format(request.user.first_name, request.user.last_name)
+    text_content = '{0} {1} has created a shirt. Order # {2}'.format(request.user.first_name, request.user.last_name, order_id)
+    html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(request.user.first_name, request.user.last_name, order_id)
 
-        
-#UPON SHIRT CREATION OR UPDATE SEND AN EMAIL TO RODEO and CREATOR
-@receiver(post_save, sender=TShirt, dispatch_uid='views')
-def shirt_created(sender, instance, created, **kwargs):
-    if created:
-        #TO Rodeo
-        subject = 'New shirt created by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
-        text_content = '{0} {1} has created a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
-        html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
-
-        creator_subject = "Your design has been uploaded"
-        creator_text_content = "Your design has been uploaded."
-        creator_html_content = "Your design has been uploaded."
-
-    else:
-        #TO Rodeo
-        subject = 'Shirt edited by {0} {1}'.format(instance.user.first_name, instance.user.last_name)
-        text_content = '{0} {1} has edited a shirt. Order # {2}'.format(instance.user.first_name, instance.user.last_name, instance.id)
-        html_content = '{0} {1} has edited a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(instance.user.first_name, instance.user.last_name, instance.id)
-
-        creator_subject = "Your design has been edited"
-        creator_text_content = "Your design has been edited."
-        creator_html_content = "Your design has been edited."
+    creator_subject = "Your design has been uploaded"
+    creator_text_content = "Your design has been uploaded."
+    creator_html_content = "Your design has been uploaded."
 
     from_email='matt.mansour@makerstudios.com'
     to='slackbabbath@gmail.com'
-    creater_to = instance.user.email
+    creater_to = request.user.email
 
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
@@ -68,6 +65,7 @@ def shirt_created(sender, instance, created, **kwargs):
     creator_msg.attach_alternative(creator_html_content, "text/html")
     creator_msg.send()
 
+        
 def tool_edit(request, shirt_id):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -92,11 +90,65 @@ def tool_edit(request, shirt_id):
         tshirt.logo = new_upload_path[14:]
         tshirt.save()
         return HttpResponse('Edited')
-#        return HttpResponse('Page Edited')
     return HttpResponse('Edit Page')
 
 
-def success(request):
+@csrf_protect
+def preview(request, shirt_id):
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt = TShirt.objects.get(id=shirt_id)
+
+    if request.user != tshirt.user:
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt.color = request.GET.get('col', 'white')
+    tshirt.save()
+
+    init_data = {
+        'name_of_shirt':tshirt.title,
+        'size':tshirt.size,
+        'additional_notes':tshirt.additional_instructions,
+    }
+
+    form = TShirtInstructions(auto_id=True, initial=init_data)
+    if request.method == "POST":
+        form = TShirtInstructions(request.POST, auto_id=True)
+        if form.is_valid():
+            tshirt.title = form.cleaned_data['name_of_shirt']
+            tshirt.size = form.cleaned_data['size']
+            tshirt.order_submission_status = "Submitted"
+            tshirt.additional_instructions = form.cleaned_data['additional_notes']
+            tshirt.save()
+
+            redirect = "/success/{0}/".format(tshirt.id)
+            return HttpResponseRedirect(redirect)
+        
+    return render_to_response('pages/preview.html',{'tshirt':tshirt, 'form':form},
+                context_instance=RequestContext(request))
+
+
+@csrf_protect
+def success(request, shirt_id):
+    try:
+        is_in_list = AllowedUser.objects.get(email_address=request.user.email)
+        print 'Found authorized user email: %s' % is_in_list.email_address
+    except AllowedUser.DoesNotExist:
+        print 'User not allowed'
+        return HttpResponseRedirect('/forbidden/')
+
+    tshirt = TShirt.objects.get(id=shirt_id)
+
+    if request.user != tshirt.user:
+        return HttpResponseRedirect('/forbidden/')
+
+    email_shirt_created(request, tshirt.id)
+    
     return render_to_response('pages/success.html',{},
                 context_instance=RequestContext(request))
 
@@ -116,6 +168,7 @@ def my_shirt_list(request):
                 context_instance=RequestContext(request))
 
 
+@csrf_protect
 def unauthorized(request):
     return render_to_response('pages/unauthorized.html',{},
                 context_instance=RequestContext(request))
@@ -151,22 +204,19 @@ def edit_shirt(request, shirt_id):
         return HttpResponseRedirect(redirect)
 
     init_data = {
-        'additional_notes':tshirt.additional_instructions,
         'logo':"",
     }
 
-    form = TShirtForm(auto_id=True, initial=init_data)
+    form = TShirtLogo(auto_id=True, initial=init_data)
     if request.method == "POST":
-        form = TShirtForm(request.POST, request.FILES, auto_id=True)
+        form = TShirtLogo(request.POST, request.FILES, auto_id=True)
         if form.is_valid():
             logo = form.cleaned_data['logo']
-            additional_instructions = form.cleaned_data['additional_notes']
 
             if not logo:
                 tshirt.logo = init_data['logo']
             else:
                 tshirt.logo = logo
-            tshirt.additional_instructions = additional_instructions
             tshirt.save()
 
             redirect = "/designer/?logo={0}&shirtid={1}".format(tshirt.logo, tshirt.id)
@@ -186,18 +236,17 @@ def create_shirt_form(request):
         print 'User not allowed'
         return HttpResponseRedirect('/forbidden/')
 
-    form = TShirtForm(auto_id=True)
+    form = TShirtLogo(auto_id=True)
     if request.method == "POST":
-        form = TShirtForm(request.POST, request.FILES, auto_id=True)
+        form = TShirtLogo(request.POST, request.FILES, auto_id=True)
 
         if form.is_valid():
             logo = form.cleaned_data['logo']
-            additional_instructions = form.cleaned_data['additional_notes']
 
             obj = TShirt(title='Order from site',
                          user=request.user,
                          logo=logo,
-                         additional_instructions=additional_instructions,
+                         order_submission_status = "Started",
                          is_order_closed=False)
             obj.save()
 
