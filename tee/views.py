@@ -93,7 +93,6 @@ def tool_edit(request, shirt_id):
     return HttpResponse('Edit Page')
 
 
-@csrf_protect
 def preview(request, shirt_id):
     try:
         is_in_list = AllowedUser.objects.get(email_address=request.user.email)
@@ -107,9 +106,6 @@ def preview(request, shirt_id):
     if request.user != tshirt.user:
         return HttpResponseRedirect('/forbidden/')
 
-    tshirt.color = request.GET.get('col', 'white')
-    tshirt.save()
-
     init_data = {
         'name_of_shirt':tshirt.title,
         'size':tshirt.size,
@@ -118,6 +114,11 @@ def preview(request, shirt_id):
 
     form = TShirtInstructions(auto_id=True, initial=init_data)
     if request.method == "POST":
+        if request.POST.get('prevcolor', False):
+            newcolor = request.POST.get('prevcolor', False)
+            tshirt.color = newcolor
+            tshirt.save()
+            
         form = TShirtInstructions(request.POST, auto_id=True)
         if form.is_valid():
             tshirt.title = form.cleaned_data['name_of_shirt']
@@ -128,6 +129,10 @@ def preview(request, shirt_id):
 
             redirect = "/success/{0}/".format(tshirt.id)
             return HttpResponseRedirect(redirect)
+
+    else:
+        tshirt.color = request.GET.get('col', 'white')
+        tshirt.save()
         
     return render_to_response('pages/preview.html',{'tshirt':tshirt, 'form':form},
                 context_instance=RequestContext(request))

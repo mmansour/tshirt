@@ -60,7 +60,7 @@ $("a#btn_submit").click(function(event) {
     </object>
     </div>
     <div id="submitorder">
-
+{#    <form enctype="multipart/form-data" action="/preview/{{ tshirt.id }}/" method="post" id="create-shirt" autocomplete="on">#}
     <form enctype="multipart/form-data" action="/preview/{{ tshirt.id }}/?logo={{ tshirt.logo }}&col={{ tshirt.color }}" method="post" id="create-shirt" autocomplete="on">
     {% csrf_token %}
     {{ form.as_p }}
