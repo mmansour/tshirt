@@ -20,7 +20,7 @@ class TShirtAdmin(DisplayableAdmin):
         return u'<a href="/static/media/%s">%s</a>' % (obj.logo, obj.logo)
     logo_link.allow_tags = True
 
-    list_display = ('user', 'title', 'order_submission_status', 'logo_link','size','additional_instructions' ,'publish_date', 'is_order_closed',)
+    list_display = ('pk', 'user', 'title', 'order_submission_status', 'logo_link','size','additional_instructions' ,'publish_date', 'is_order_closed',)
     list_display_links = ('user',)
     list_editable = ('is_order_closed',)
     list_filter = ['order_submission_status','is_order_closed', 'publish_date',]

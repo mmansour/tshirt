@@ -16,7 +16,7 @@ class TShirt(Displayable):
     is_order_closed = models.BooleanField(blank=True, verbose_name="Order Closed?", default=False)
 
     def __unicode__(self):
-        return self.title
+        return "Order: {0}-{1}".format(self.title, self.pk)
 
 
 class AllowedUser(models.Model):
