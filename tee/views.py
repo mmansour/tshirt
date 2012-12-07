@@ -45,16 +45,29 @@ class TShirtInstructions(forms.Form):
 # New Email Function
 def email_shirt_created(request, order_id):
     #TO Rodeo
-    subject = 'New shirt created by {0} {1}'.format(request.user.first_name, request.user.last_name)
-    text_content = '{0} {1} has created a shirt. Order # {2}'.format(request.user.first_name, request.user.last_name, order_id)
-    html_content = '{0} {1} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {2}</a>'.format(request.user.first_name, request.user.last_name, order_id)
+    subject = 'New shirt created by {0} {1} - {2}'.format(request.user.first_name, request.user.last_name, request.user)
+    text_content = '{0} {1} - {2} has created a shirt. Order # {3}'\
+        .format(request.user.first_name, request.user.last_name, request.user, order_id)
+    html_content = '{0} {1} - {2} has created a shirt. <a href="http://request.rodeoarcade.com/admin/" target="_blank">Order # {3}</a>'\
+        .format(request.user.first_name, request.user.last_name, request.user, order_id)
 
     creator_subject = "Your design has been uploaded"
-    creator_text_content = "Your design has been uploaded."
-    creator_html_content = "Your design has been uploaded."
+    creator_text_content = """Thank you for submitting your design to Rodeo Arcade!
+    After your design has been reviewed, we will create a sample and prepare
+    a photo of the modeled product.
+    We will notify you once it is available for purchase on RodeoArcade.com.
 
-    from_email='matt.mansour@makerstudios.com'
-    to='slackbabbath@gmail.com'
+    Feel free to contact us with any questions at support@rodeoarcade.com
+    """
+    
+    creator_html_content = """<p>Thank you for submitting your design to Rodeo Arcade!
+    After your design has been reviewed, we will create a sample and prepare
+    a photo of the modeled product.
+    We will notify you once it is available for purchase on RodeoArcade.com.</p>
+    <p>Feel free to contact us with any questions at <a href='mailto:support@rodeoarcade.com'>support@rodeoarcade.com</a></p>"""
+
+    from_email='request@rodeoarcade.com'
+    to='request@rodeoarcade.com'
     creater_to = request.user.email
 
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
